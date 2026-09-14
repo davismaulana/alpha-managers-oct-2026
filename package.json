@@ -1,5 +1,5 @@
 {
-  "name": "autopilot-business-june2026",
+  "name": "alpha-managers-oct-2026",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
+    "verify:isolation": "node scripts/verify-event-isolation.mjs",
+    "verify:isolation:live": "node scripts/verify-event-isolation.mjs --live",
     "preview": "vite preview"
   },
   "dependencies": {

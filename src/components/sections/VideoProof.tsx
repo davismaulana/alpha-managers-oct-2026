@@ -24,7 +24,7 @@ const VideoProof: React.FC = () => {
               preload="metadata"
               playsInline
               className="w-full aspect-video bg-black object-cover"
-              poster="/august-horizontal.webp"
+              poster="/october-event-poster.png"
             >
               <source src="/august-client-session.mp4" type="video/mp4" />
               Browser Anda tidak mendukung pemutaran video.

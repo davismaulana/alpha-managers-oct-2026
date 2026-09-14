@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '../ui/Button';
 import { cn } from '../../lib/utils';
 import { ArrowRight, Menu, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { openRegistrationCTA } from '../../lib/constants';
+import { TICKET_URL, trackTicketCTA } from '../../lib/constants';
 
 const Navigation: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -30,8 +29,8 @@ const Navigation: React.FC = () => {
     };
   }, [menuOpen]);
 
-  const handleApplyNow = () => {
-    openRegistrationCTA();
+  const handlePayment = () => {
+    trackTicketCTA();
     setMenuOpen(false);
   };
 
@@ -61,14 +60,15 @@ const Navigation: React.FC = () => {
             <span className="text-gold-400 text-xs font-semibold tracking-wider uppercase">Sesi Eksklusif</span>
           </div>
 
-          <Button
-            variant="primary"
-            size="sm"
-            className="hidden md:flex gap-2"
-            onClick={handleApplyNow}
+          <a
+            href={TICKET_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="hidden h-9 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-gold-500 to-gold-600 px-4 text-sm font-bold text-black shadow-lg shadow-gold-900/20 transition-all hover:from-gold-400 hover:to-gold-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 md:flex"
+            onClick={trackTicketCTA}
           >
-            Daftar via WA <ArrowRight className="w-4 h-4" />
-          </Button>
+            Bayar Tiket <ArrowRight className="h-4 w-4" />
+          </a>
         </div>
 
         {/* Mobile Hamburger Button */}
@@ -92,14 +92,15 @@ const Navigation: React.FC = () => {
             className="md:hidden overflow-hidden bg-black/90 backdrop-blur-xl border-b border-white/5"
           >
             <div className="container mx-auto px-4 py-6">
-              <Button
-                variant="primary"
-                size="default"
-                className="w-full flex gap-2 justify-center"
-                onClick={handleApplyNow}
+              <a
+                href={TICKET_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-gold-500 to-gold-600 px-4 text-base font-bold text-black shadow-lg shadow-gold-900/20 transition-all hover:from-gold-400 hover:to-gold-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500"
+                onClick={handlePayment}
               >
-                Daftar via WA <ArrowRight className="w-4 h-4" />
-              </Button>
+                Bayar Tiket <ArrowRight className="h-4 w-4" />
+              </a>
             </div>
           </motion.div>
         )}

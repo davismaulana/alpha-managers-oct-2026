@@ -9,13 +9,13 @@ const distDir = path.join(__dirname, 'dist');
 const port = Number(process.env.PORT || 80);
 const leadWebhookUrl = String(process.env.LEAD_WEBHOOK_URL || '').trim();
 const previewLeadMessage =
-  'Preview aktif. Profil belum tersimpan karena webhook Agustus belum dikonfigurasi.';
+  'Preview aktif. Profil undangan belum tersimpan karena webhook Event Ini belum dikonfigurasi.';
 
-const CAMPAIGN_ID = 'cfr-august2026';
-const EVENT_NAME = 'Alpha Managers - 13 Agustus 2026';
-const DEFAULT_UTM_CAMPAIGN = 'alpha-managers-august-2026';
-const DEFAULT_UTM_SOURCE = 'alpha-managers-august-lp';
-const DEFAULT_SOURCE = 'alpha-managers-august-lp';
+const CAMPAIGN_ID = 'cfr-oct-2026';
+const EVENT_NAME = 'Alpha Managers 3.0 Exclusive Workshop - 1 Oktober 2026';
+const DEFAULT_UTM_CAMPAIGN = 'alpha-managers-oct-2026';
+const DEFAULT_UTM_SOURCE = 'alpha-managers-oct-2026-lp';
+const DEFAULT_SOURCE = 'alpha-managers-oct-2026-lp';
 
 const contentTypes = {
   '.html': 'text/html; charset=utf-8',
@@ -32,13 +32,14 @@ const contentTypes = {
 };
 
 const requiredFields = [
-  'name',
-  'whatsapp',
-  'company',
-  'role',
-  'city',
-  'participant_count',
-  'manager_challenge',
+  'business_type',
+  'monthly_revenue',
+  'team_size',
+  'team_challenges',
+  'business_impact',
+  'owner_dependence',
+  'desired_outcome',
+  'workshop_focus',
 ];
 
 const sendJson = (response, status, payload) => {
@@ -64,6 +65,14 @@ const readBody = async (request) => {
 
 const cleanText = (value, maxLength = 240) => String(value || '').trim().slice(0, maxLength);
 
+const cleanSelections = (value, maxItems = 3) => {
+  if (!Array.isArray(value)) return [];
+  return value.map((item) => cleanText(item, 180)).filter(Boolean).slice(0, maxItems);
+};
+
+const hasValue = (value) =>
+  Array.isArray(value) ? value.some((item) => Boolean(cleanText(item))) : Boolean(cleanText(value));
+
 const normalizeWhatsapp = (value) => {
   let raw = cleanText(value, 40).replace(/\D/g, '');
   if (raw.startsWith('0')) raw = `62${raw.slice(1)}`;
@@ -72,9 +81,13 @@ const normalizeWhatsapp = (value) => {
 };
 
 const validateLead = (payload) => {
-  const missing = requiredFields.filter((field) => !cleanText(payload[field]));
+  const missing = requiredFields.filter((field) => !hasValue(payload[field]));
   if (missing.length > 0) {
     return `Lengkapi field: ${missing.join(', ')}.`;
+  }
+
+  if (!cleanText(payload.whatsapp)) {
+    return '';
   }
 
   const whatsapp = normalizeWhatsapp(payload.whatsapp);
@@ -86,9 +99,10 @@ const validateLead = (payload) => {
 };
 
 const normalizeLeadPayload = (payload, request) => {
-  const whatsapp = normalizeWhatsapp(payload.whatsapp);
+  const whatsapp = cleanText(payload.whatsapp) ? normalizeWhatsapp(payload.whatsapp) : '';
   const eventId = cleanText(payload.event_id || `${CAMPAIGN_ID}-${randomUUID()}`, 120);
   const metadata = typeof payload.metadata === 'object' && payload.metadata ? payload.metadata : {};
+  const teamChallenges = cleanSelections(payload.team_challenges);
 
   return {
     name: cleanText(payload.name, 120),
@@ -96,11 +110,23 @@ const normalizeLeadPayload = (payload, request) => {
     email: cleanText(payload.email, 160),
     company: cleanText(payload.company || payload.business, 160),
     business: cleanText(payload.company || payload.business, 160),
+    business_type: cleanText(payload.business_type || metadata.businessType, 120),
     role: cleanText(payload.role, 80),
     city: cleanText(payload.city || metadata.city, 120),
-    participant_count: cleanText(payload.participant_count, 80),
-    manager_challenge: cleanText(payload.manager_challenge || payload.challenge, 1000),
-    challenge: cleanText(payload.manager_challenge || payload.challenge, 1000),
+    team_size: cleanText(payload.team_size || payload.participant_count, 120),
+    participant_count: cleanText(payload.team_size || payload.participant_count, 120),
+    social_url: cleanText(payload.social_url, 240),
+    instagram_or_website: cleanText(payload.social_url, 240),
+    monthly_revenue: cleanText(payload.monthly_revenue || metadata.monthlyRevenue, 120),
+    route_type: cleanText(payload.route_type, 40),
+    qualification_path: cleanText(payload.route_type, 40),
+    team_challenges: teamChallenges,
+    manager_challenge: cleanText(payload.manager_challenge || teamChallenges.join('; ') || payload.challenge, 1000),
+    challenge: cleanText(payload.manager_challenge || teamChallenges.join('; ') || payload.challenge, 1000),
+    business_impact: cleanText(payload.business_impact, 240),
+    owner_dependence: cleanText(payload.owner_dependence, 240),
+    desired_outcome: cleanText(payload.desired_outcome, 240),
+    workshop_focus: cleanText(payload.workshop_focus, 240),
     event_id: eventId,
     fbp: cleanText(payload.fbp, 180),
     fbc: cleanText(payload.fbc, 180),
@@ -112,19 +138,19 @@ const normalizeLeadPayload = (payload, request) => {
     utm_content: cleanText(payload.utm_content, 120),
     user_agent: cleanText(request.headers['user-agent'], 300),
     campaign: CAMPAIGN_ID,
-    business_category: cleanText(metadata.businessCategory, 120),
-    monthly_revenue: cleanText(metadata.monthlyRevenue, 120),
-    page_title: 'Alpha Managers August 2026',
+    business_category: cleanText(payload.business_type || metadata.businessCategory, 120),
+    page_title: 'Alpha Managers 3.0 Event Ini 2026',
     event_name: EVENT_NAME,
     metadata: {
-      event_date: '2026-08-13',
+      event_date: '2026-10-01',
       event_name: EVENT_NAME,
+      form_style: 'abm-stepper',
     },
   };
 };
 
 const postLeadToWebhook = async (lead) => {
-  if (!leadWebhookUrl || !leadWebhookUrl.includes('cfr-august2026-leadform')) {
+  if (!leadWebhookUrl || !leadWebhookUrl.includes('cfr-oct')) {
     return {
       ok: true,
       preview: true,
@@ -170,7 +196,8 @@ const postLeadToWebhook = async (lead) => {
       status: response.status,
       id: body.id || body.leadId || lead.event_id,
       campaign: body.campaign || lead.campaign,
-      message: 'Profil diterima. Tim Alpha Leaders akan meninjau kecocokan dan menghubungi Anda via WhatsApp.',
+      message:
+        'Profil undangan diterima. Tim Coach Ferly akan meninjau kecocokan dan menghubungi Anda untuk validasi slot.',
     };
   } catch (error) {
     const aborted = error instanceof Error && error.name === 'AbortError';
@@ -217,7 +244,16 @@ const server = createServer(async (request, response) => {
   try {
     const url = new URL(request.url || '/', 'http://localhost');
 
-    if (request.method === 'GET' && url.pathname === '/healthz') {
+    if ((request.method === 'GET' || request.method === 'HEAD') && url.pathname === '/healthz') {
+      if (request.method === 'HEAD') {
+        response.writeHead(200, {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Cache-Control': 'no-store',
+        });
+        response.end();
+        return;
+      }
+
       sendJson(response, 200, { ok: true });
       return;
     }
@@ -262,6 +298,6 @@ const server = createServer(async (request, response) => {
   }
 });
 
-server.listen(port, '0.0.0.0', () => {
-  console.log(`autopilot-business-august2026 listening on ${port}`);
+server.listen(port, () => {
+  console.log(`October 2026 Alpha Managers LP server listening on :${port}`);
 });

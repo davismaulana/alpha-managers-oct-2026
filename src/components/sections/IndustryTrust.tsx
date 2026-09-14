@@ -16,7 +16,7 @@ const IndustryTrust: React.FC = () => {
         <FadeIn direction="up" delay={0.3}>
           <div className="relative overflow-hidden border border-gold-500/30 bg-[var(--cf-cream)] p-4 md:p-6">
             <img
-              src="/testimoni-cropped.webp"
+              src="/industry-trust-october.png"
               alt="Logo collage of industries Coach Ferly has served"
               className="relative w-full h-auto rounded-lg"
               loading="lazy"

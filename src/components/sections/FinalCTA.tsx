@@ -3,6 +3,7 @@ import { Button } from '../ui/Button';
 import { ArrowRight } from 'lucide-react';
 import { FadeIn } from '../animations/FadeIn';
 import { openRegistrationCTA } from '../../lib/constants';
+import { EventSchedule } from './VenueGallery';
 
 const FinalCTA: React.FC = () => {
   return (
@@ -19,9 +20,7 @@ const FinalCTA: React.FC = () => {
          </FadeIn>
 
          <FadeIn direction="up" delay={0.2}>
-           <p className="text-xl md:text-2xl font-medium text-zinc-600 mb-8 tracking-wide">
-             Aloft Hotel by Marriott, Jakarta Barat | Kamis, 13 Agustus 2026
-           </p>
+           <EventSchedule compact className="mb-8 justify-center text-zinc-700 [&_span]:text-zinc-700 [&_svg]:text-gold-700" />
          </FadeIn>
 
          <FadeIn direction="up" delay={0.4}>

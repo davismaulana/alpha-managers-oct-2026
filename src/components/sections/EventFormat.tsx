@@ -1,103 +1,100 @@
 import React from 'react';
-import { Button } from '../ui/Button';
-import { ArrowRight, Calendar, Clock, MapPin } from 'lucide-react';
+import { ArrowRight, CircleCheck, Gift, MessageCircle, Ticket } from 'lucide-react';
 import { FadeIn } from '../animations/FadeIn';
-import { openRegistrationCTA } from '../../lib/constants';
+import {
+  CTA_URL,
+  TICKET_URL,
+  trackTicketCTA,
+  trackWhatsAppCTA,
+} from '../../lib/constants';
+import { EventSchedule } from './VenueGallery';
 
-const EventFormat: React.FC = () => {
-  const tickets = [
-    'Breakfast, Lunch & Coffee Break',
-    'Handbook Materi',
-    'Sertifikat',
-    'Q&A dengan Mentor',
-    'Pre-Test & Post-Test',
-    'Networking Eksklusif Managers',
-    'Potongan untuk Kelas Berikutnya'
-  ];
+const packageItems = [
+  'Breakfast, lunch, dan coffee break',
+  'Handbook materi',
+  'Sertifikat kehadiran',
+  'Q&A dengan mentor',
+  'Pre-test dan post-test',
+  'Networking eksklusif manager',
+  'Potongan untuk kelas berikutnya',
+];
 
-  return (
-    <section className="py-32 bg-zinc-950 relative overflow-hidden">
-
-      {/* Background Elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-gold-900/5 rounded-full blur-[100px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-zinc-800/20 rounded-full blur-[100px]" />
-      </div>
-
-      <div className="container mx-auto px-4 md:px-6 relative z-10">
-
-        <div className="text-center mb-12">
-          <FadeIn direction="up">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">
-              Detail Event & Investasi Program
-            </h2>
-          </FadeIn>
-        </div>
-
-        {/* Event Details Banner */}
-        <FadeIn direction="up" delay={0.1}>
-          <div className="max-w-4xl mx-auto mb-16">
-            <div className="overflow-hidden rounded-[28px] border border-gold-500/30 bg-[linear-gradient(155deg,rgba(18,15,9,0.98),rgba(35,28,16,0.94))] shadow-[0_35px_80px_-35px_rgba(212,175,106,0.35)]">
-              <div className="border-b border-gold-500/20 px-8 py-7 md:px-10">
-                <p className="text-center text-xs tracking-[0.34em] text-gold-300 uppercase mb-5">Exclusive Community Sharing</p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                  <div className="flex flex-col items-center">
-                    <MapPin className="w-8 h-8 text-gold-400 mb-3" />
-                    <p className="text-gold-200 font-medium text-lg">Aloft Hotel by Marriott, Jakarta Barat</p>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <Calendar className="w-8 h-8 text-gold-400 mb-3" />
-                    <p className="text-gold-200 font-medium text-lg">Kamis, 13 Agustus 2026</p>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <Clock className="w-8 h-8 text-gold-400 mb-3" />
-                    <p className="text-gold-200 font-medium text-lg">09.00 – 17.00 WIB</p>
-                  </div>
-                </div>
-              </div>
-              <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-0">
-                <div className="border-b border-gold-500/15 lg:border-b-0 lg:border-r px-8 py-8 md:px-10 md:py-10 text-center lg:text-left">
-                  <div className="inline-flex rounded-full border border-green-400/25 bg-green-400/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.24em] text-green-300">
-                    By Invitation Only · Free
-                  </div>
-                  <p className="mt-6 text-xs tracking-[0.32em] text-gold-300 uppercase">Investasi Program</p>
-                  <p className="mt-2 text-xs tracking-[0.32em] text-gold-300 uppercase">Promo Khusus Presale</p>
-                  <div className="mt-5 flex items-center justify-center gap-3 lg:justify-start">
-                    <span className="text-zinc-500 line-through text-xl md:text-2xl">9.999.999</span>
-                    <span className="text-white font-bold text-4xl md:text-5xl">7.999.999</span>
-                  </div>
-                  <p className="mt-4 text-sm leading-relaxed text-zinc-300">
-                    Mengacu pada brief client di Google Doc: invitation session ini gratis untuk peserta terpilih, dan penawaran program lanjutannya menggunakan harga presale berikut.
-                  </p>
-                </div>
-                <div className="px-8 py-8 md:px-10 md:py-10">
-                  <p className="text-xs tracking-[0.32em] text-gold-300 uppercase mb-5 text-center lg:text-left">Tiket Termasuk</p>
-                  <div className="grid gap-3">
-                    {tickets.map((item) => (
-                      <div key={item} className="rounded-2xl border border-white/8 bg-white/5 px-4 py-3.5 text-sm text-zinc-200">
-                        {item}
-                      </div>
-                    ))}
-                  </div>
-                </div>
+const EventFormat: React.FC = () => (
+  <section className="relative overflow-hidden bg-zinc-950 py-24 md:py-32">
+    <div className="container relative z-10 mx-auto px-4 md:px-6">
+      <FadeIn direction="up">
+        <div className="mx-auto max-w-6xl overflow-hidden border border-gold-500/25 bg-[linear-gradient(145deg,rgba(10,10,10,0.96),rgba(20,17,11,0.94))] backdrop-blur-md md:grid md:grid-cols-[0.92fr_1.08fr]">
+          <div className="relative border-b border-gold-500/20 p-6 md:border-b-0 md:border-r md:p-8">
+            <div className="relative mb-6 flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-md border border-gold-500/30 bg-gold-500/10 text-gold-300">
+                <Gift className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.22em] text-gold-300">Termasuk</p>
+                <h2 className="mt-1 text-2xl font-black text-white">Workshop package</h2>
               </div>
             </div>
+
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {packageItems.map((item) => (
+                <div key={item} className="flex items-start gap-3 border border-white/10 bg-black/28 px-4 py-3">
+                  <CircleCheck className="mt-1 h-4 w-4 shrink-0 text-gold-400" />
+                  <p className="text-sm leading-relaxed text-zinc-200">{item}</p>
+                </div>
+              ))}
+            </div>
           </div>
-        </FadeIn>
-        <FadeIn direction="up" delay={0.4}>
-          <div className="flex justify-center">
-            <Button
-              variant="outline"
-              className="w-fit border-gold-600 text-gold-400 hover:bg-gold-600 hover:text-white"
-              onClick={openRegistrationCTA}
-            >
-              Daftar via WA <ArrowRight className="ml-2 w-4 h-4" />
-            </Button>
+
+          <div className="relative flex flex-col justify-between p-6 md:min-h-[360px] md:p-9">
+            <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(135deg,transparent_0%,transparent_52%,rgba(212,175,106,0.08)_52%,rgba(212,175,106,0.08)_54%,transparent_54%)]" />
+            <div className="relative">
+              <EventSchedule compact className="mb-7 border-b border-white/10 pb-6" />
+              <div className="mb-7 flex items-center gap-3">
+                <span className="flex h-10 w-10 items-center justify-center rounded-md border border-gold-500/30 bg-gold-500/10 text-gold-300">
+                  <Ticket className="h-5 w-5" />
+                </span>
+                <p className="text-[10px] uppercase tracking-[0.24em] text-zinc-400">Premium Offline Jakarta</p>
+              </div>
+              <h2 className="font-serif text-3xl font-bold leading-tight text-white md:text-4xl">
+                Investasi untuk manager yang harus mulai memimpin hasil.
+              </h2>
+              <div className="mt-8 flex flex-wrap items-end gap-x-4 gap-y-2">
+                <span className="font-serif text-5xl font-bold leading-none text-gold-200 md:text-6xl">5.999.999</span>
+                <span className="pb-2 text-lg font-semibold text-zinc-500 line-through md:text-xl">9.999.000</span>
+              </div>
+              <p className="mt-6 max-w-xl text-sm leading-relaxed text-zinc-400 md:text-base">
+                Amankan kursi lewat link tiket, atau tanya dulu dengan Julia di WhatsApp bila ada yang ingin dikonfirmasi.
+              </p>
+            </div>
+
+            <div className="relative mt-8 flex flex-col items-stretch gap-3 sm:items-start">
+              <a
+                href={TICKET_URL}
+                target="_blank"
+                rel="noreferrer"
+                onClick={trackTicketCTA}
+                className="inline-flex h-14 w-full items-center justify-center rounded-full bg-gradient-to-r from-gold-500 to-gold-600 px-10 text-lg font-bold text-black shadow-lg shadow-gold-900/20 transition-all hover:-translate-y-0.5 hover:from-gold-400 hover:to-gold-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 sm:w-auto"
+              >
+                Bayar Tiket Sekarang <ArrowRight className="ml-2 h-5 w-5" />
+              </a>
+              <a
+                href={CTA_URL}
+                target="_blank"
+                rel="noreferrer"
+                onClick={trackWhatsAppCTA}
+                className="inline-flex h-12 w-full items-center justify-center rounded-full border border-green-400/50 bg-green-500/10 px-8 text-base font-bold text-green-300 transition-colors hover:bg-green-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 sm:w-auto"
+              >
+                <MessageCircle className="mr-2 h-5 w-5" /> Tanya Dulu via WhatsApp
+              </a>
+              <p className="mt-4 text-xs uppercase tracking-[0.18em] text-gold-300/70">
+                By invitation only · Full day workshop
+              </p>
+            </div>
           </div>
-        </FadeIn>
-      </div>
-    </section>
-  );
-};
+        </div>
+      </FadeIn>
+    </div>
+  </section>
+);
 
 export { EventFormat };

@@ -41,9 +41,9 @@ const roleOptions = [
   'Lainnya',
 ];
 
-const CAMPAIGN_PREFIX = 'cfr-august2026';
-const DEFAULT_UTM_CAMPAIGN = 'alpha-managers-august-2026';
-const DEFAULT_UTM_SOURCE = 'alpha-managers-august-lp';
+const CAMPAIGN_PREFIX = 'cfr-oct-2026';
+const DEFAULT_UTM_CAMPAIGN = 'alpha-managers-oct-2026';
+const DEFAULT_UTM_SOURCE = 'alpha-managers-oct-2026-lp';
 
 const getCookie = (name: string) => {
   const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
@@ -126,7 +126,7 @@ const LeadCapture: React.FC = () => {
           leadId: body.leadId,
           message:
             body.message ||
-            'Preview aktif. Profil belum tersimpan ke sistem registrasi karena webhook Agustus belum dikonfigurasi.',
+            'Preview aktif. Profil belum tersimpan ke sistem registrasi karena webhook Oktober belum dikonfigurasi.',
         });
         return;
       }
@@ -179,7 +179,7 @@ const LeadCapture: React.FC = () => {
 
               <div className="mt-8 grid gap-4">
                 {[
-                  'Data masuk sebagai calon peserta Alpha Managers Agustus 2026.',
+                  'Data masuk sebagai calon peserta Alpha Managers 1 Oktober 2026.',
                   'Tim Alpha Leaders meninjau kesesuaian konteks organisasi dan prioritas manager Anda.',
                   'Follow-up dilakukan via WhatsApp untuk konfirmasi seat dan langkah berikutnya.',
                 ].map((item) => (
