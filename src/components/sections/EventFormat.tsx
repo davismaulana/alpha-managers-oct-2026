@@ -59,7 +59,7 @@ const EventFormat: React.FC = () => (
                 Investasi untuk manager yang harus mulai memimpin hasil.
               </h2>
               <div className="mt-8 flex flex-wrap items-end gap-x-4 gap-y-2">
-                <span className="font-serif text-5xl font-bold leading-none text-gold-200 md:text-6xl">3.999.999</span>
+                <span className="font-serif text-5xl font-bold leading-none text-gold-200 md:text-6xl">5.999.999</span>
                 <span className="pb-2 text-lg font-semibold text-zinc-500 line-through md:text-xl">9.999.000</span>
               </div>
               <p className="mt-6 max-w-xl text-sm leading-relaxed text-zinc-400 md:text-base">
